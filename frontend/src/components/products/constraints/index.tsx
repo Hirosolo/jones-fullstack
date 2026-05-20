@@ -1,7 +1,5 @@
 import { useRouter } from "next/router";
 
-import ConstraintButtons from "./ConstraintButtons";
-
 import { useProductsState } from "@Contexts/ProductsContext";
 
 export default function Constraints({
@@ -12,13 +10,8 @@ export default function Constraints({
   const router = useRouter();
   const { search, q, categoryId } = router.query;
   const { filterState, clearFilters } = useProductsState();
-  const { color, size, height, year } = filterState;
-  const clearAllVisible = !!(
-    color.length +
-    size.length +
-    height.length +
-    year.length
-  );
+  const { keyword = "", category = "", brand = "" } = filterState;
+  const clearAllVisible = !!(keyword || category || brand);
   const title = {
     new: "New Arrivals",
     best: "Best Sellers",
@@ -32,7 +25,7 @@ export default function Constraints({
           {isSearch ? (
             <>&ldquo;{search || q}&rdquo;</>
           ) : (
-            title ?? filterState.gender.toLowerCase()
+            title ?? "Products"
           )}
         </h1>
         {currentProductsCount ? (
@@ -44,14 +37,6 @@ export default function Constraints({
             <strong>Nothing Found!</strong>
           </p>
         )}
-        {!isSearch ? (
-          <div className="constraints__filters">
-            <ConstraintButtons paramName="color" items={color} />
-            <ConstraintButtons paramName="size" items={size} />
-            <ConstraintButtons paramName="height" items={height} />
-            <ConstraintButtons paramName="year" items={year} />
-          </div>
-        ) : null}
 
         {clearAllVisible ? (
           <button
