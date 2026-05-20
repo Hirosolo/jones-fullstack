@@ -14,12 +14,11 @@ export default function CategoriesIndex({ categories }: { categories: any[] }) {
         <h1>All Categories</h1>
         <div className="categories-grid">
           {categories.map((c) => {
-            const slug = c.slug || getPathString(c.name || c);
             const name = c.name || c;
             const num = c.num_product ?? c.num ?? 0;
             const image = c.image?.w400 || c.image?.url || c.image || null;
             return (
-              <Link key={slug} href={`/category/${slug}`}>
+              <Link key={name} href={`/products?category=${encodeURIComponent(name)}`}>
                 <a className="category-card">
                   <div className="category-card__img">
                     <img src={image || ProductPlaceholderImg} alt={name} />
@@ -53,3 +52,4 @@ export async function getStaticProps() {
   // fallback
   return { props: { categories: staticCategories.map((c) => ({ name: c, slug: getPathString(c), num_product: 0 })) } };
 }
+

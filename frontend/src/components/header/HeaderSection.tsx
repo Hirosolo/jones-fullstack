@@ -189,7 +189,7 @@ export default function HeaderSection() {
             </div>
             {categories.map((name: string) => (
               <div key={name} className="header__brands-group">
-                <Link href={"/category/" + getPathString(name)}>
+                <Link href={`/products?category=${encodeURIComponent(name)}`}>
                   <a className="header__brands-group-btn header__brands-group-btn--link">
                     {name}
                   </a>
@@ -228,7 +228,7 @@ export default function HeaderSection() {
                 {activeBrandsGroup &&
                   brandsData[activeBrandsGroup]?.map((brand) => (
                     <div key={brand} className="header__brands-content-item">
-                      <Link href={`/brand/${getPathString(brand)}`}>
+                      <Link href={`/products?brand=${encodeURIComponent(brand)}`}>
                         <a>{brand}</a>
                       </Link>
                     </div>

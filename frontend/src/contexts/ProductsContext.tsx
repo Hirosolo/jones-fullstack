@@ -147,10 +147,10 @@ function ProductsProvider(
   const filterListings = (action: { [type: string]: unknown }) => {
     filterState.current = { ...filterState.current, ...action };
     setProductListing(getFilteredListings());
-    const { page } = filterState.current;
 
+    const queryStr = params.toString();
     Router.replace(
-      `/category/${page || "all"}?${params.toString()}`,
+      `/products${queryStr ? "?" + queryStr : ""}`,
       undefined,
       {
         scroll: false,
@@ -164,7 +164,7 @@ function ProductsProvider(
     filterState.current = { ..._filterState, page };
     setProductListing(products || []);
 
-    Router.replace(`/category/${page || "all"}`, undefined, {
+    Router.replace(`/products`, undefined, {
       scroll: false,
       shallow: true,
     });

@@ -19,7 +19,7 @@ export const CategoriesList = [
   </li>,
   ...categories.map((name) => (
     <li key={name} className="sidebar__links-item sidebar__links-accordion">
-      <Link href={"/category/" + getPathString(name)}>
+      <Link href={`/products?category=${encodeURIComponent(name)}`}>
         <a className="sidebar__anchor" style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
           {name}
         </a>
