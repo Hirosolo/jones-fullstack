@@ -11,9 +11,9 @@ export const categories: string[] = CategoriesData.categories;
 
 export const CategoriesList = [
   <li key="view-all" className="sidebar__links-item sidebar__links-accordion">
-    <Link href="/category/all">
+    <Link href="/category">
       <a className="sidebar__anchor" style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-        VIEW ALL
+        VIEW ALL CATEGORIES
       </a>
     </Link>
   </li>,

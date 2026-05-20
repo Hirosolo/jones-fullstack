@@ -179,11 +179,11 @@ export default function HeaderSection() {
       >
         {/* ── CATEGORIES: Grid Layout ──────────────────────────────── */}
         {dropdownMode === "categories" && (
-          <div className="header__brands-accordion header__categories-grid">
+            <div className="header__brands-accordion header__categories-grid">
             <div className="header__brands-group">
-              <Link href="/category/all">
+              <Link href="/category">
                 <a className="header__brands-group-btn header__brands-group-btn--link">
-                  VIEW ALL
+                  VIEW ALL CATEGORIES
                 </a>
               </Link>
             </div>
@@ -203,6 +203,13 @@ export default function HeaderSection() {
         {dropdownMode === "brands" && (
           <div className="header__brands-two-pane">
             <div className="header__brands-sidebar">
+              <div className="header__brands-sidebar-item">
+                <Link href="/brand">
+                  <a className="header__brands-group-btn header__brands-group-btn--link">
+                    VIEW ALL BRANDS
+                  </a>
+                </Link>
+              </div>
               {Object.keys(brandsData).map((group) => (
                 <button
                   key={group}
