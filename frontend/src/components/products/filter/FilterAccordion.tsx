@@ -1,12 +1,9 @@
 import { IoIosArrowBack } from "react-icons/io";
 
 import Button from "@Components/formControls/Button";
-import GenderParam from "./params/GenderParam";
-import MainColorParam from "./params/MainColorParam";
-import SizesParam from "./params/SizesParam";
-import HeightParam from "./params/HeightParam";
-import PriceFilterParam from "./params/PriceFilterParam";
-import YearParam from "./params/YearParam";
+import KeywordParam from "./params/KeywordParam";
+import CategoryParam from "./params/CategoryParam";
+import BrandParam from "./params/BrandParam";
 
 import { useProductsState } from "@Contexts/ProductsContext";
 
@@ -26,12 +23,9 @@ export default function FilterAccordion({ active, setState }: PropTypes) {
         </button>
       </div>
 
-      <GenderParam />
-      <MainColorParam />
-      <SizesParam />
-      <HeightParam />
-      <PriceFilterParam />
-      <YearParam />
+      <KeywordParam />
+      <CategoryParam />
+      <BrandParam />
 
       <div className="filter__confirm">
         <Button

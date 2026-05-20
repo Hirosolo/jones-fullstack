@@ -101,4 +101,29 @@
       @extend %checkbox--checked;
     }
   }
+
+  &__input,
+  &__select {
+    width: 100%;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid #ddd;
+    border-radius: 0.3rem;
+    font-size: $text-sm;
+    font-family: inherit;
+
+    &:focus {
+      outline: none;
+      border-color: $c-text-red;
+      box-shadow: 0 0 0 2px rgba($c-text-red, 0.1);
+    }
+  }
+
+  &__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.2rem;
+    padding-right: 2rem;
+  }
 }
