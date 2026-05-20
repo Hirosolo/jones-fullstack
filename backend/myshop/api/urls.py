@@ -7,6 +7,7 @@ from myshop.api.views.category import listing as category_listing
 from myshop.api.views.product import detail as product_detail
 from myshop.api.views.product import listing as product_listing
 from myshop.api.views.product.listing import ProductListView
+from myshop.api.views import admin_products
 from myshop.api.views.review import listing as review_listing
 from myshop.api.views.review import post as review_post
 from myshop.api.views.tags import listing as tags_listing
@@ -19,6 +20,20 @@ from myshop.api.views.cart import listing as cart_listing
 app_name = 'myshop_api'
 
 urlpatterns = [
+    # Admin Product CRUD
+    path('admin-products/', admin_products.admin_product_list,
+         name='admin_product_list_api'),
+    path('admin-products/options/', admin_products.admin_product_options,
+         name='admin_product_options_api'),
+    path('admin-products/<int:pk>/', admin_products.admin_product_detail,
+         name='admin_product_detail_api'),
+    path('admin-products/create/', admin_products.admin_product_create,
+         name='admin_product_create_api'),
+    path('admin-products/<int:pk>/update/', admin_products.admin_product_update,
+         name='admin_product_update_api'),
+    path('admin-products/<int:pk>/delete/', admin_products.admin_product_delete,
+         name='admin_product_delete_api'),
+
     # Specific patterns FIRST to avoid conflicts
     path('categories-list/',
         category_listing.CategoriesListView.as_view(), name='categories_list_api'),

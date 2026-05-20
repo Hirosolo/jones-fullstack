@@ -1,0 +1,104 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Articles - Admin{% endblock %}
+
+{% block page_title %}Articles{% endblock %}
+{% block page_subtitle %}Manage all articles in your shop{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+    <div class="search-box">
+        <form method="get" style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="text" name="q" class="form-control" placeholder="Search articles..." value="{{ query }}">
+            <select name="status" class="form-control" style="max-width: 150px;">
+                <option value="">All Status</option>
+                <option value="draft" {% if status == 'draft' %}selected{% endif %}>Draft</option>
+                <option value="published" {% if status == 'published' %}selected{% endif %}>Published</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Search</button>
+            {% if query or status %}<a href="{% url 'admin:article_list' %}" class="btn btn-secondary">Clear</a>{% endif %}
+        </form>
+    </div>
+    <a href="{% url 'admin:article_create' %}" class="btn btn-primary">+ Add Article</a>
+</div>
+
+{% if articles %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Code</th>
+            <th>Status</th>
+            <th>Featured</th>
+            <th>Created</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for article in articles %}
+        <tr>
+            <td>
+                <strong>{{ article.title }}</strong>
+                <div style="color: var(--text-secondary); font-size: 0.85rem;">{{ article.slug }}</div>
+            </td>
+            <td>
+                <code>{{ article.code }}</code>
+            </td>
+            <td>
+                {% if article.status == 'published' %}
+                    <span class="badge badge-success">Published</span>
+                {% else %}
+                    <span class="badge badge-warning">Draft</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if article.featured %}
+                    <span style="color: var(--success);">⭐ Featured</span>
+                {% else %}
+                    <span style="color: var(--text-secondary);">—</span>
+                {% endif %}
+            </td>
+            <td>
+                <small style="color: var(--text-secondary);">{{ article.created_at|date:"M d, Y" }}</small>
+            </td>
+            <td>
+                <a href="{% url 'admin:article_detail' article.id %}" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Edit</a>
+                <form action="{% url 'admin:article_delete' article.id %}" method="post" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1{% if query %}&q={{ query }}{% endif %}">« First</a>
+        <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">&lsaquo; Previous</a>
+    {% endif %}
+    
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <span class="current">{{ num }}</span>
+        {% else %}
+            <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+    
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next &rsaquo;</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}">Last »</a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<div class="alert alert-success">
+    No articles found. <a href="{% url 'admin:article_create' %}">Create your first article</a>
+</div>
+{% endif %}
+{% endblock %}

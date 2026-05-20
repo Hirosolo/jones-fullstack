@@ -413,8 +413,12 @@ NEXTJS_LOGIN_COOKIE_EXPIRE_DAYS = int(config('NEXTJS_LOGIN_COOKIE_EXPIRE_DAYS', 
 NEXTJS_REDIRECT_URL = config('NEXTJS_REDIRECT_URL', default='http://localhost:8000/')
 NEXTJS_JWT_KEY_NAME = 'jones_jwt'
 NEXTJS_REFRESH_TOKEN_KEY_NAME = 'jones_refresh'
-LOGIN_REDIRECT_URL = '/django/auth/next/jwt/'
+# Redirect to admin root after login when using Django auth
+LOGIN_REDIRECT_URL = '/admin/'
 LOGOUT_REDIRECT_URL = NEXTJS_REDIRECT_URL
+
+# Admin Panel Authentication
+LOGIN_URL = 'admin:login'
 
 STATICSITEMAPS_REFRESH_AFTER = 60 * 3
 STATICSITEMAPS_ROOT_SITEMAP = 'musicGearShop.sitemaps.sitemaps'

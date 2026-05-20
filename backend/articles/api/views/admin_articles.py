@@ -1,6 +1,7 @@
 """
 Admin Article CRUD API views.
-Secured by X-Admin-Key header authentication.
+Secured by X-Admin-Key header or JWT Bearer token authentication.
+Only staff/admin users can access these endpoints.
 """
 import os
 from functools import wraps
@@ -17,14 +18,24 @@ from rest_framework.response import Response
 from articles.models import Article, ArticleCategory, ArticleTag
 
 
-def admin_api_key_required(view_func):
+def admin_api_key_or_token_required(view_func):
+    """
+    Decorator to check for either API key or JWT token authentication.
+    """
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
+        # Check JWT token first
+        if hasattr(request, 'user') and request.user.is_authenticated:
+            if request.user.is_staff or request.user.is_superuser:
+                return view_func(request, *args, **kwargs)
+        
+        # Fall back to API key check
         admin_key = request.headers.get('X-Admin-Key', '')
         expected_key = getattr(settings, 'ADMIN_API_KEY', None) or os.environ.get('ADMIN_API_KEY', '')
-        if not expected_key or admin_key != expected_key:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
-        return view_func(request, *args, **kwargs)
+        if expected_key and admin_key == expected_key:
+            return view_func(request, *args, **kwargs)
+        
+        return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
     return wrapper
 
 
@@ -68,7 +79,7 @@ def _serialize_article(a, detail=False):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
-@admin_api_key_required
+@admin_api_key_or_token_required
 def admin_article_list(request):
     """List articles with search + status filter."""
     search = request.query_params.get('search', '').strip()
@@ -101,7 +112,7 @@ def admin_article_list(request):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
-@admin_api_key_required
+@admin_api_key_or_token_required
 def admin_article_options(request):
     """Categories + tags for the article form dropdowns."""
     categories = list(ArticleCategory.objects.order_by('name').values('id', 'name', 'slug'))
@@ -111,7 +122,7 @@ def admin_article_options(request):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
-@admin_api_key_required
+@admin_api_key_or_token_required
 def admin_article_detail(request, pk):
     try:
         a = Article.objects.select_related('category').prefetch_related('tags').get(pk=pk)
@@ -142,7 +153,7 @@ def _apply_tags(article, data):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 @parser_classes([MultiPartParser, FormParser, JSONParser])
-@admin_api_key_required
+@admin_api_key_or_token_required
 def admin_article_create(request):
     data = request.data
 
@@ -203,7 +214,7 @@ def admin_article_create(request):
 @api_view(['PUT', 'PATCH'])
 @permission_classes([AllowAny])
 @parser_classes([MultiPartParser, FormParser, JSONParser])
-@admin_api_key_required
+@admin_api_key_or_token_required
 def admin_article_update(request, pk):
     try:
         article = Article.objects.get(pk=pk)
@@ -270,7 +281,7 @@ def admin_article_update(request, pk):
 
 @api_view(['DELETE'])
 @permission_classes([AllowAny])
-@admin_api_key_required
+@admin_api_key_or_token_required
 def admin_article_delete(request, pk):
     try:
         article = Article.objects.get(pk=pk)

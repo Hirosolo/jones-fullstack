@@ -45,6 +45,10 @@ urlpatterns = [
 
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    
+    # Admin Panel
+    path('admin/', include('utils.admin_urls')),
+    
     path('acp/', admin.site.urls),
 
     # auth API
@@ -67,6 +71,9 @@ urlpatterns = [
 
     # API for utils
     path('api/utils/', include('utils.api.urls'), name='utils_api'),
+
+    # Register myshop site URLs so the `myshop` namespace is available in templates
+    path('shop/', include(("myshop.urls", "myshop"), namespace='myshop'),),
 
     # Fake view
     path('articles/', fake_view, name='article_listing'),

@@ -1,0 +1,136 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}{% if product %}Edit{% else %}Create{% endif %} Product - Admin{% endblock %}
+
+{% block page_title %}{% if product %}Edit Product{% else %}Create New Product{% endif %}{% endblock %}
+{% block page_subtitle %}{% if product %}Update product details{% else %}Add a new product to your shop{% endif %}{% endblock %}
+
+{% block content %}
+{% if error %}
+<div class="alert alert-error">{{ error }}</div>
+{% endif %}
+
+<div style="background: white; border-radius: 0.5rem; padding: 2rem; border: 1px solid var(--border); max-width: 900px;">
+    <form method="post">
+        {% csrf_token %}
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- Left Column -->
+            <div>
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem;">Basic Information</h3>
+                
+                <div class="form-group">
+                    <label for="name">Product Name *</label>
+                    <input type="text" id="name" name="name" class="form-control" value="{{ product.name|default:'' }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="desc_short">Short Description *</label>
+                    <input type="text" id="desc_short" name="desc_short" class="form-control" value="{{ product.desc_short|default:'' }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="desc">Full Description *</label>
+                    <textarea id="desc" name="desc" class="form-control" required>{{ product.desc|default:'' }}</textarea>
+                </div>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; font-size: 1.1rem;">Pricing & Stock</h3>
+                
+                <div class="form-group">
+                    <label for="price_origin">Original Price *</label>
+                    <input type="number" id="price_origin" name="price_origin" class="form-control" step="0.01" value="{{ product.price_origin|default:'' }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="price_promo">Promotional Price</label>
+                    <input type="number" id="price_promo" name="price_promo" class="form-control" step="0.01" value="{{ product.price_promo|default:'' }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="stock">Stock Quantity *</label>
+                    <input type="number" id="stock" name="stock" class="form-control" value="{{ product.stock|default:'' }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="is_available" name="is_available" {% if product.is_available or not product %}checked{% endif %}>
+                        <label for="is_available">Available for Sale</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column -->
+            <div>
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem;">Organization</h3>
+                
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category" class="form-control">
+                        <option value="">Select Category</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" {% if product.category.id == category.id %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="brand">Brand</label>
+                    <select id="brand" name="brand" class="form-control">
+                        <option value="">Select Brand</option>
+                        {% for brand in brands %}
+                            <option value="{{ brand.id }}" {% if product.brand.id == brand.id %}selected{% endif %}>
+                                {{ brand.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tags</label>
+                    <div class="checkbox-group">
+                        {% for tag in tags %}
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tag_{{ tag.id }}" name="tags" value="{{ tag.id }}" {% if tag.id in product.tags.all|dictsort:"id" %}checked{% endif %}>
+                                <label for="tag_{{ tag.id }}">{{ tag.name }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; font-size: 1.1rem;">Additional Info</h3>
+                
+                <div class="form-group">
+                    <label for="seller_notes">Seller Notes</label>
+                    <textarea id="seller_notes" name="seller_notes" class="form-control">{{ product.seller_notes|default:'' }}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="admin_notes">Admin Notes</label>
+                    <textarea id="admin_notes" name="admin_notes" class="form-control">{{ product.admin_notes|default:'' }}</textarea>
+                </div>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; font-size: 1.1rem;">SEO</h3>
+                
+                <div class="form-group">
+                    <label for="meta_title">Meta Title (max 60 chars)</label>
+                    <input type="text" id="meta_title" name="meta_title" class="form-control" maxlength="60" value="{{ product.meta_title|default:'' }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="meta_desc">Meta Description (max 145 chars)</label>
+                    <input type="text" id="meta_desc" name="meta_desc" class="form-control" maxlength="145" value="{{ product.meta_desc|default:'' }}">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <a href="{% url 'admin:product_list' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">
+                {% if product %}Update Product{% else %}Create Product{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

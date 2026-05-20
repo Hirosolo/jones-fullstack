@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import type { ProductComponentType } from "src/types/shared";
 
 import { MOCK_PRODUCTS } from "@Lib/mockData";
+import { fetchProducts } from "@Lib/api";
 
 const CollectionSection = dynamic(
   () => import("@Components/home/CollectionSection")
@@ -39,9 +40,16 @@ const Home: NextPage<HomePropTypes> = ({
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  // Frontend only: Use mock products
-  const newArrivals = MOCK_PRODUCTS;
-  const bestSellers = MOCK_PRODUCTS;
+  // Try fetching from backend, fall back to mock products
+  let newArrivals = MOCK_PRODUCTS;
+  let bestSellers = MOCK_PRODUCTS;
+  try {
+    const products = await fetchProducts();
+    newArrivals = products;
+    bestSellers = products;
+  } catch (e) {
+    // keep mocks
+  }
 
   // Placeholder for image data URLs if needed, otherwise empty
   const newArrivalsImgDataUrls: Record<string, string> = {};

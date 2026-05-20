@@ -3,6 +3,7 @@ import { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import SEO from "@Components/common/SEO";
 import { useCurrencyFormatter } from "@Contexts/UIContext";
 import { MOCK_PRODUCTS } from "@Lib/mockData";
+import { fetchProductBySlug, fetchProductSlugs, fetchProducts } from "@Lib/api";
 import { getPathString } from "src/utils";
 import { ProductPlaceholderImg } from "src/constants";
 import ProductsGrid from "@Components/products/ProductsGrid";
@@ -111,44 +112,65 @@ const ProductPage: NextPage<ProductPageType> = ({
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = MOCK_PRODUCTS.map((product) => ({
-    params: { productSlug: getPathString(`${product.title} ${product.sku}`) },
-  }));
-
-  return { paths, fallback: false };
+  try {
+    const slugs = await fetchProductSlugs();
+    const paths = slugs.map((s) => ({ params: { productSlug: s } }));
+    return { paths, fallback: false };
+  } catch (e) {
+    const paths = MOCK_PRODUCTS.map((product) => ({
+      params: { productSlug: getPathString(`${product.title} ${product.sku}`) },
+    }));
+    return { paths, fallback: false };
+  }
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const productSlug = params?.productSlug as string;
-  const product = MOCK_PRODUCTS.find(
-    (p) => getPathString(`${p.title} ${p.sku}`) === productSlug
-  );
+  // Try backend first
+  try {
+    const product = await fetchProductBySlug(productSlug);
+    if (!product) return { notFound: true };
 
-  if (!product) {
-    return { notFound: true };
-  }
+    const products = await fetchProducts().catch(() => []);
 
-  const blurDataUrls = product.mediaURLs.reduce<Record<string, string>>(
-    (acc, url) => {
+    const blurDataUrls = product.mediaURLs.reduce<Record<string, string>>((acc, url) => {
       acc[url] = ProductPlaceholderImg;
       return acc;
-    },
-    {}
-  );
+    }, {});
 
-  const imageDimensions = product.mediaURLs.map(() => ({
-    width: 1000,
-    height: 1000,
-  }));
+    const imageDimensions = product.mediaURLs.map(() => ({ width: 1000, height: 1000 }));
 
-  return {
-    props: {
-      product,
-      relatedProducts: MOCK_PRODUCTS.filter(p => p.id !== product.id),
-      imageDimensions,
-      blurDataUrls,
-    },
-  };
+    return {
+      props: {
+        product,
+        relatedProducts: products.filter((p) => p.id !== product.id),
+        imageDimensions,
+        blurDataUrls,
+      },
+    };
+  } catch (e) {
+    // Fallback to mocks
+    const product = MOCK_PRODUCTS.find(
+      (p) => getPathString(`${p.title} ${p.sku}`) === productSlug
+    );
+    if (!product) return { notFound: true };
+
+    const blurDataUrls = product.mediaURLs.reduce<Record<string, string>>((acc, url) => {
+      acc[url] = ProductPlaceholderImg;
+      return acc;
+    }, {});
+
+    const imageDimensions = product.mediaURLs.map(() => ({ width: 1000, height: 1000 }));
+
+    return {
+      props: {
+        product,
+        relatedProducts: MOCK_PRODUCTS.filter((p) => p.id !== product.id),
+        imageDimensions,
+        blurDataUrls,
+      },
+    };
+  }
 };
 
 export default ProductPage;

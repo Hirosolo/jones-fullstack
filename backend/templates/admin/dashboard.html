@@ -1,0 +1,105 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Dashboard - Admin{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}Overview of your shop statistics{% endblock %}
+
+{% block content %}
+<style>
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 0.5rem;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--border);
+        transition: all 0.2s;
+    }
+    
+    .stat-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+    
+    .stat-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+    
+    .stat-link {
+        display: inline-block;
+        margin-top: 1rem;
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+    
+    .stat-link:hover {
+        transform: translateX(4px);
+    }
+</style>
+
+<div class="stats-grid">
+    <!-- Products Card -->
+    <div class="stat-card">
+        <div class="stat-icon">📦</div>
+        <div class="stat-label">Total Products</div>
+        <div class="stat-value">{{ products_count }}</div>
+        <a href="{% url 'admin:product_list' %}" class="stat-link">View Products →</a>
+    </div>
+    
+    <!-- Articles Card -->
+    <div class="stat-card">
+        <div class="stat-icon">📰</div>
+        <div class="stat-label">Total Articles</div>
+        <div class="stat-value">{{ articles_count }}</div>
+        <a href="{% url 'admin:article_list' %}" class="stat-link">View Articles →</a>
+    </div>
+    
+    <!-- Quick Actions Card -->
+    <div class="stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-label">Quick Actions</div>
+        <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="{% url 'admin:product_create' %}" class="btn btn-primary" style="text-align: center;">+ Add Product</a>
+            <a href="{% url 'admin:article_create' %}" class="btn btn-primary" style="text-align: center;">+ Add Article</a>
+        </div>
+    </div>
+</div>
+
+<div style="background: white; border-radius: 0.5rem; padding: 2rem; border: 1px solid var(--border);">
+    <h2 style="margin-bottom: 1rem;">Welcome to Admin Panel</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+        You have full control over your shop's products and articles. Use the navigation menu on the left to manage your content.
+    </p>
+    <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+        <li>Manage products with prices, stock, and categories</li>
+        <li>Create and edit articles for your blog</li>
+        <li>Organize content with categories and tags</li>
+        <li>SEO optimization for all content</li>
+    </ul>
+</div>
+{% endblock %}

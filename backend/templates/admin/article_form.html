@@ -1,0 +1,122 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}{% if article %}Edit{% else %}Create{% endif %} Article - Admin{% endblock %}
+
+{% block page_title %}{% if article %}Edit Article{% else %}Create New Article{% endif %}{% endblock %}
+{% block page_subtitle %}{% if article %}Update article details{% else %}Add a new article to your blog{% endif %}{% endblock %}
+
+{% block content %}
+{% if error %}
+<div class="alert alert-error">{{ error }}</div>
+{% endif %}
+
+<div style="background: white; border-radius: 0.5rem; padding: 2rem; border: 1px solid var(--border); max-width: 900px;">
+    <form method="post">
+        {% csrf_token %}
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- Left Column -->
+            <div>
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem;">Basic Information</h3>
+                
+                <div class="form-group">
+                    <label for="title">Article Title *</label>
+                    <input type="text" id="title" name="title" class="form-control" value="{{ article.title|default:'' }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="excerpt">Excerpt</label>
+                    <textarea id="excerpt" name="excerpt" class="form-control">{{ article.excerpt|default:'' }}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="content">Content *</label>
+                    <textarea id="content" name="content" class="form-control" style="min-height: 300px;" required>{{ article.content|default:'' }}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="author_name">Author Name</label>
+                    <input type="text" id="author_name" name="author_name" class="form-control" value="{{ article.author_name|default:'' }}">
+                </div>
+            </div>
+            
+            <!-- Right Column -->
+            <div>
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem;">Publication</h3>
+                
+                <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" name="status" class="form-control" required>
+                        <option value="draft" {% if article.status == 'draft' or not article %}selected{% endif %}>Draft</option>
+                        <option value="published" {% if article.status == 'published' %}selected{% endif %}>Published</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="featured" name="featured" {% if article.featured %}checked{% endif %}>
+                        <label for="featured">Mark as Featured</label>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; font-size: 1.1rem;">Organization</h3>
+                
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category" class="form-control">
+                        <option value="">Select Category</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" {% if article.category.id == category.id %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tags</label>
+                    <div class="checkbox-group">
+                        {% for tag in tags %}
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tag_{{ tag.id }}" name="tags" value="{{ tag.id }}" {% if tag.id in article.tags.all|dictsort:"id" %}checked{% endif %}>
+                                <label for="tag_{{ tag.id }}">{{ tag.name }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; font-size: 1.1rem;">Featured Image</h3>
+                
+                <div class="form-group">
+                    <label for="featured_image_url">Featured Image URL</label>
+                    <input type="url" id="featured_image_url" name="featured_image_url" class="form-control" value="{{ article.featured_image_url|default:'' }}" placeholder="https://example.com/image.jpg">
+                    {% if article.featured_image_url %}
+                        <small style="color: var(--text-secondary); display: block; margin-top: 0.5rem;">
+                            Current: {{ article.featured_image_url }}
+                        </small>
+                    {% endif %}
+                </div>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; font-size: 1.1rem;">SEO</h3>
+                
+                <div class="form-group">
+                    <label for="meta_title">Meta Title (max 60 chars)</label>
+                    <input type="text" id="meta_title" name="meta_title" class="form-control" maxlength="60" value="{{ article.meta_title|default:'' }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="meta_desc">Meta Description (max 145 chars)</label>
+                    <input type="text" id="meta_desc" name="meta_desc" class="form-control" maxlength="145" value="{{ article.meta_desc|default:'' }}">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <a href="{% url 'admin:article_list' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">
+                {% if article %}Update Article{% else %}Create Article{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
