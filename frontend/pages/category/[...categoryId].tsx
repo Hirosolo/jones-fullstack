@@ -17,6 +17,7 @@ import ProductsProvider, {
   useProductsState,
 } from "@Contexts/ProductsContext";
 import { MOCK_PRODUCTS } from "@Lib/mockData";
+import { fetchProducts } from "@Lib/api";
 import { categories } from "@Components/header/MenuLists";
 import { ProductPlaceholderImg } from "src/constants";
 import { getPathString } from "src/utils";
@@ -122,14 +123,18 @@ export default function CategoryPageWithContext({
   };
 
   useEffect(() => {
-    ref.current?.updateFilterState?.(getQueryAsFilter());
+    // If this is the "all" category page, do not apply any filters —
+    // show all products. Otherwise update based on the query params.
+    ref.current?.updateFilterState?.(
+      categoryId === "all" ? {} : getQueryAsFilter()
+    );
   });
 
   return (
     <ProductsProvider
       productImagePlaceholders={productImagePlaceholders}
       ref={ref}
-      preFilter={getQueryAsFilter()}
+      preFilter={categoryId === "all" ? {} : getQueryAsFilter()}
       products={products}
     >
       <CategoryPage categoryId={categoryId} />
@@ -150,16 +155,18 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async function ({ params }) {
   const [category = "all"] = params?.categoryId as string[];
+  // Try backend, fallback to mocks
+  let allProducts = MOCK_PRODUCTS;
+  try {
+    allProducts = await fetchProducts();
+  } catch (e) {
+    // ignore
+  }
 
-  // Frontend only: Use mock products
-  const allProducts = MOCK_PRODUCTS;
-  const productImagePlaceholders = allProducts.reduce<Record<string, string>>(
-    (acc, product) => {
-      acc[product.id] = ProductPlaceholderImg;
-      return acc;
-    },
-    {}
-  );
+  const productImagePlaceholders = allProducts.reduce<Record<string, string>>((acc, product) => {
+    acc[product.id] = ProductPlaceholderImg;
+    return acc;
+  }, {});
 
   return {
     props: {
