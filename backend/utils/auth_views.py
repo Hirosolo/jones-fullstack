@@ -16,29 +16,11 @@ def get_jwt_next(request):
     Giải pháp này chỉ hoạt động khi NextJS và Django chạy trên cùng một domain.
     """
     user = request.user
+    # Legacy NextJS integration is not required for the backend-only admin panel.
+    # If an authenticated user reaches this endpoint, redirect them to the
+    # configured login redirect (admin dashboard). Otherwise return an error.
     if user.is_authenticated:
-        refresh = RefreshToken.for_user(user)
-        token = str(refresh.access_token)
-        refresh_token = str(refresh)
-        response = render(
-            request,
-            'next_auth/jwt.html',
-            {'redirect_url': settings.NEXTJS_REDIRECT_URL}
-        )
-        exp = arrow.now().shift(days=+settings.NEXTJS_LOGIN_COOKIE_EXPIRE_DAYS).datetime
-        response.set_cookie(
-            key=settings.NEXTJS_JWT_KEY_NAME,
-            value=token,
-            expires=exp,
-            httponly=False  # set False là để NextJS có thể đọc được cookie này qua JS
-        )
-        response.set_cookie(
-            key=settings.NEXTJS_REFRESH_TOKEN_KEY_NAME,
-            value=refresh_token,
-            expires=exp,
-            httponly=False
-        )
-        return response
+        return redirect(resolve_url(settings.LOGIN_REDIRECT_URL))
     return HttpResponse('Error on login, please try again.')
 
 
