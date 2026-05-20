@@ -1,0 +1,20 @@
+@use "../abstracts" as *;
+
+.image-gallery {
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
+
+  &__slide {
+    flex: 0 0 auto;
+    position: relative;
+    min-width: 18rem;
+    height: 24rem;
+  }
+
+  &__caption {
+    color: $c-text-gray;
+    font-size: $text-sm;
+    margin-top: 0.5rem;
+  }
+}

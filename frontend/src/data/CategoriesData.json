@@ -1,0 +1,90 @@
+{
+  "categories": [
+    "Accessories",
+    "Clothing",
+    "Footwear",
+    "Home Decor",
+    "Sale"
+  ],
+
+  "brands": {
+    "Business": [
+      "Budweiser", "Chevrolet", "Coca-Cola", "Ducati", "Grey Goose",
+      "Guinness", "Harley-Davidson", "Indian Motorcycle", "Jack Daniel's",
+      "Jeep", "Marlboro", "Monster Energy", "Starbucks",
+      "The Famous Grouse", "The Kraken"
+    ],
+    "Culture": [
+      "Alpha Kappa Alpha", "America", "Bob Kevoian", "Calvin and Hobbes",
+      "Captain Morgan", "Father's Day", "Independence Hall", "Mother's Day",
+      "Peanuts", "Route 66", "Royal Navy", "Smokey Bear",
+      "US Marine Corps", "US Navy", "USA", "Veteran Day"
+    ],
+    "K-Pop": [
+      "Aespa", "BTS", "G-Dragon"
+    ],
+    "Movie": [
+      "Avatar", "Batman", "Dragon Ball", "Godzilla", "Harry Potter",
+      "James Bond 007", "Marty Supreme", "Naruto", "One Piece", "Peanut",
+      "Pokémon", "Scream", "Star Trek", "Star Wars", "Stranger Things",
+      "The Lord of the Rings", "The Muppet Show", "The Simpsons",
+      "Top Gun", "Winnie the Pooh", "Zootopia"
+    ],
+    "Music": [
+      "Bruce Springsteen", "Clint Black", "Dolly Parton", "Elvis Presley",
+      "Freddie Mercury", "Jimmy Buffett", "Kenny Chesney", "Michael Jackson",
+      "Prince", "Rock the Country", "Westlife", "Willie Nelson"
+    ],
+    "Other": [
+      "Animals", "Bad Omens", "Charlie Puth", "Chris Brown", "DC", "DMX",
+      "Doctor Who", "Five Finger Death Punch", "Foo Fighters",
+      "Friday The 13th", "G.I. Joe", "Game of Thrones", "Gundam",
+      "House of the Dragon", "Jujutsu Kaisen", "Justin Bieber",
+      "La La Land", "Magic The Gathering", "Marvel", "Mission Impossible",
+      "My Hero Academia", "Noah Kahan", "Pepe Aguilar", "Phil Campbell",
+      "Pirates of the Caribbean", "Predator", "Rat Fink", "Slash",
+      "Snoop Dogg", "Taxi Driver", "The Texas Chainsaw Massacre"
+    ],
+    "Rock Band": [
+      "AC/DC", "Aerosmith", "Black Stone Cherry", "Guns N' Roses",
+      "Iron Maiden", "KISS", "Led Zeppelin", "Megadeth", "Metallica",
+      "Pink Floyd", "Queen", "RUSH", "Sleep Token", "The Beatles",
+      "The Eagles", "The Rolling Stones", "Thirty Seconds to Mars",
+      "Van Halen", "Wu-Tang Clan"
+    ],
+    "Sport": [
+      "MLB", "NBA", "NCAA", "NFL", "NHL", "Other Sport", "Soccer"
+    ],
+    "Tabletop": [
+      "Dungeons & Dragons"
+    ],
+    "Video Game": [
+      "Fallout", "Sonic The Hedgehog", "World of Warcraft", "Zelda"
+    ]
+  },
+
+  "colorways": [
+    "Black", "White", "Dark Mocha", "Brown", "University Blue Black",
+    "University Blue", "Blue", "Chicago", "Lucky Green", "Pink Glaze",
+    "Court Purple", "Clay Green", "Twist W Panda", "Midnight Navy",
+    "Yellow Toe", "Shadow", "Bred", "Varsity Red", "Black Red",
+    "Fire Red", "Denim", "Pinksicle", "Wolf Grey", "Grey",
+    "Multi Color", "Signal Blue", "Pollen"
+  ],
+
+  "men": [
+    "OG LOW", "LOW PHAT", "MID PHAT", "ALPHA", "85",
+    "RETRO HIGH SB", "HIGH ZOOM", "RARE AIR", "FLYKNIT", "STRAP", "ULTRA"
+  ],
+  "men_2": [
+    "POLLEN", "BRED", "DARK", "BLACK", "OG",
+    "DENIM", "RETRO OG", "MOCHA", "UNC", "MID"
+  ],
+  "women": [
+    "OG LOW", "LOW SLIP", "LOW LIFT", "NEW RETRO",
+    "MIDS", "OG HIGH", "ZOOM COMFORT", "WILD"
+  ],
+  "women_2": [
+    "MULTI", "DENIM", "HOMAGE", "RETRO HIGH", "MID SE", "OG HIGH"
+  ]
+}
