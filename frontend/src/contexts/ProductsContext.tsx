@@ -167,7 +167,8 @@ function ProductsProvider(
       })
     );
 
-    return products.filter(combinedPredicates);
+    // Defensive: if `products` is undefined for any reason, treat as empty list
+    return (products || []).filter(combinedPredicates);
   };
 
   const filterListings = (action: { [type: string]: unknown }) => {
