@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block media_head %}
+    <meta http-equiv="refresh" content="0;url={{ redirect_url }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container my-4">
+        {% if user.is_authenticated %}
+            <p>Bạn đang đăng nhập với tên tài khoản: <b>{{ user.username }}</b></p>
+            <p><i>Trang sẽ tự động chuyển...</i></p>
+        {% else %}
+            <p>Phải đăng nhập để sử dụng chức năng này.</p>
+        {% endif %}
+    </div>
+{% endblock %}

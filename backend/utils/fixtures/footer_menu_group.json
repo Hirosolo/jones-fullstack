@@ -1,0 +1,26 @@
+[
+{
+    "model": "utils.footermenugroup",
+    "pk": 1,
+    "fields": {
+        "title": "Về chúng tôi",
+        "order": 1
+    }
+},
+{
+    "model": "utils.footermenugroup",
+    "pk": 2,
+    "fields": {
+        "title": "Sản phẩm",
+        "order": 2
+    }
+},
+{
+    "model": "utils.footermenugroup",
+    "pk": 3,
+    "fields": {
+        "title": "Hỗ trợ khách hàng",
+        "order": 3
+    }
+}
+]

@@ -1,0 +1,28 @@
+# Local development override — run on a developer machine to validate
+# the Hetzner stack without touching production. Use with:
+#   docker compose -f docker-compose.yml -f docker-compose.local.yml up -d
+#
+# Differences from production:
+#   - api port 8000 exposed on the host so tests can hit Django directly
+#     without nginx.
+#   - nginx + certbot omitted (Let's Encrypt won't work on localhost).
+#   - DB port exposed for occasional psql poking from host.
+
+services:
+  db:
+    ports:
+      - "127.0.0.1:5433:5432"
+
+  api:
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      ALLOWED_HOSTS: "*"
+      DEBUG: "True"
+      SECURE_SSL_REDIRECT: "False"
+
+  nginx:
+    profiles: ["disabled"]
+
+  certbot:
+    profiles: ["disabled"]

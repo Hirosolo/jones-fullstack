@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load socialaccount %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1>Chào mừng!</h1>
+            <p>
+                <b>{{ user.username }}</b>
+            </p>
+            <ul>
+                <li>
+                    Last login: {{ user.last_login }}
+                </li>
+                <li>
+                    Register date: {{ user.date_joined }}
+                </li>
+                <li>
+                    Email: {{ user.email }}
+                </li>
+            </ul>
+
+            <form action="{% url 'account_logout' %}" method="post">
+                {% csrf_token %}
+                <p>
+                    <button class="btn btn-primary">Logout</button>
+                </p>
+            </form>
+    </div>
+{% endblock %}

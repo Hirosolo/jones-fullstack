@@ -1,0 +1,14 @@
+node_modules
+frontend/node_modules
+frontend/.next
+.git
+*.pyc
+__pycache__
+backend/staticfiles
+backend/logs
+backend/media
+demo_images
+media
+.venv
+venv
+.env

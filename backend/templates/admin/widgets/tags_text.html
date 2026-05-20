@@ -1,0 +1,72 @@
+{% include "django/forms/widgets/text.html" %}
+<datalist id="product-tag-suggestions">
+  {% for s in widget.suggestions %}<option value="{{ s }}">{% endfor %}
+</datalist>
+<script id="tag-data-{{ widget.name }}" type="application/json">{{ widget.suggestions_json|safe }}</script>
+<div id="tag-preview-{{ widget.name }}" class="tag-preview"
+     style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;min-height:24px"></div>
+<script>
+(function () {
+  var name = "{{ widget.name }}";
+  var dataEl = document.getElementById('tag-data-' + name);
+  var existing = new Set(JSON.parse(dataEl.textContent || '[]').map(function (s) { return s.toLowerCase(); }));
+  var preview = document.getElementById('tag-preview-' + name);
+  var SEP = /[,;\n\r\t|]+/g;
+
+  function render(value) {
+    if (!preview) return;
+    preview.innerHTML = '';
+    var parts = (value || '').split(SEP);
+    var seen = new Set();
+    parts.forEach(function (n) {
+      n = n.trim();
+      if (!n) return;
+      var k = n.toLowerCase();
+      if (seen.has(k)) return;
+      seen.add(k);
+      var isNew = !existing.has(k);
+      var chip = document.createElement('span');
+      chip.textContent = n + (isNew ? '  +new' : '');
+      chip.title = isNew ? 'Sẽ tự tạo Tag mới khi Save' : 'Tag đã có — sẽ link tới';
+      chip.style.cssText =
+        'padding:2px 10px;border-radius:12px;font-size:12px;color:#fff;' +
+        'background:' + (isNew ? '#28a745' : '#0066cc') + ';white-space:nowrap';
+      preview.appendChild(chip);
+    });
+  }
+
+  document.querySelectorAll('input[name="' + name + '"]').forEach(function (el) {
+    if (el.dataset.tagBound === '1') return;
+    el.dataset.tagBound = '1';
+
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        var v = el.value;
+        if (v.length && !v.endsWith(', ') && !v.endsWith(',')) {
+          el.value = v + ', ';
+        }
+        render(el.value);
+      }
+    });
+
+    el.addEventListener('paste', function (e) {
+      e.preventDefault();
+      var text = (e.clipboardData || window.clipboardData).getData('text');
+      // Normalise any separator → ', '
+      text = text.replace(SEP, ', ').replace(/\s*,\s*/g, ', ').trim();
+      var s = el.selectionStart, eEnd = el.selectionEnd;
+      var before = el.value.slice(0, s);
+      var after = el.value.slice(eEnd);
+      // Avoid sticking pasted text directly onto existing text without a separator
+      var pad = (before && !/[,\s]$/.test(before)) ? ', ' : '';
+      el.value = before + pad + text + after;
+      el.selectionStart = el.selectionEnd = (before + pad + text).length;
+      render(el.value);
+    });
+
+    el.addEventListener('input', function () { render(el.value); });
+    render(el.value);
+  });
+})();
+</script>

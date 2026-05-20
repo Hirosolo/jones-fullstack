@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(vercel --version)",
+      "Bash(railway --version)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" https://api-pezura.chulanpro.io.vn/)",
+      "Bash(npm install:*)",
+      "Bash(railway whoami:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:fulfillnext.com)",
+      "WebFetch(domain:www.fulfillnext.com)",
+      "Bash(curl -sI https://fulfillnext.com)",
+      "Bash(curl -sI https://www.fulfillnext.com)",
+      "Bash(nslookup fulfillnext.com)",
+      "Bash(nslookup www.fulfillnext.com)"
+    ]
+  }
+}

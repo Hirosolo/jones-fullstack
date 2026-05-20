@@ -1,0 +1,36 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs %}
+  <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+    &rsaquo; <a href="{% url 'admin:pod_shop_productimage_changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    &rsaquo; Bulk upload
+  </div>
+{% endblock %}
+
+{% block content %}
+  <h1>Bulk upload product images</h1>
+  <p>Chọn 1 sản phẩm rồi chọn nhiều file ảnh cùng lúc. Mỗi file thành 1 ProductImage row, <code>order</code> tự gán nối tiếp ảnh hiện có.</p>
+
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <fieldset class="module aligned">
+      {% for field in form %}
+        <div class="form-row">
+          <div>
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.help_text %}<div class="help">{{ field.help_text|safe }}</div>{% endif %}
+            {% for err in field.errors %}<p class="errornote">{{ err }}</p>{% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </fieldset>
+    <div class="submit-row">
+      <input type="submit" value="Upload all" class="default" />
+      <a href="{% url 'admin:pod_shop_productimage_changelist' %}" class="closelink">Cancel</a>
+    </div>
+  </form>
+{% endblock %}

@@ -1,0 +1,68 @@
+# Media files
+/media/
+demo_images/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+*.log
+logs/
+backend/staticfiles/
+backend/logs/
+backend/media/
+
+# Railway (deprecated)
+Procfile
+nixpacks.toml
+runtime.txt
+
+# Node / Frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+frontend/.next/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+.vercel
+
+# Hetzner deployment secrets and DB dumps
+deploy/hetzner/secrets/
+deploy/hetzner/.env
+deploy/hetzner/backups/
+deploy/hetzner/media-bucket/
+dump-*.sql
+final-dump.sql
+
+# Local-only tooling — sync scripts, .xlsx reports, sample WC payloads.
+# Kept out of git so a Vercel redeploy never sees them.
+tools/

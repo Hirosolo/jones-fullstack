@@ -1,0 +1,111 @@
+[
+{
+    "model": "utils.footermenuitem",
+    "pk": 1,
+    "fields": {
+        "group": 1,
+        "label": "Trang chủ",
+        "link": "https://jones.com",
+        "order": 1,
+        "target": "_self",
+        "rel": "noopener noreferrer"
+    }
+},
+{
+    "model": "utils.footermenuitem",
+    "pk": 2,
+    "fields": {
+        "group": 1,
+        "label": "Giới thiệu",
+        "link": "",
+        "order": 2,
+        "target": "_self",
+        "rel": "noopener noreferrer"
+    }
+},
+{
+    "model": "utils.footermenuitem",
+    "pk": 3,
+    "fields": {
+        "group": 1,
+        "label": "Chính sách",
+        "link": "",
+        "order": 3,
+        "target": "_self",
+        "rel": "noopener noreferrer"
+    }
+},
+{
+    "model": "utils.footermenuitem",
+    "pk": 4,
+    "fields": {
+        "group": 2,
+        "label": "Xu hướng mới",
+        "link": "",
+        "order": 1,
+        "target": "_self",
+        "rel": "noopener noreferrer"
+    }
+},
+{
+    "model": "utils.footermenuitem",
+    "pk": 5,
+    "fields": {
+        "group": 2,
+        "label": "Khuyến mãi",
+        "link": "https://jones.com/p/premium-wireless-headphones/",
+        "order": 2,
+        "target": "_self",
+        "rel": "noopener noreferrer"
+    }
+},
+{
+    "model": "utils.footermenuitem",
+    "pk": 6,
+    "fields": {
+        "group": 2,
+        "label": "Bộ sưu tập",
+        "link": "https://jones.com/p/premium-wireless-headphones/",
+        "order": 3,
+        "target": "_self",
+        "rel": "noopener noreferrer"
+    }
+},
+{
+    "model": "utils.footermenuitem",
+    "pk": 7,
+    "fields": {
+        "group": 3,
+        "label": "Liên hệ",
+        "link": "https://jones.com",
+        "order": 1,
+        "target": "_self",
+        "rel": "noopener noreferrer"
+    }
+},
+{
+    "model": "utils.footermenuitem",
+    "pk": 8,
+    "fields": {
+        "group": 3,
+        "label": "Hướng dẫn mua hàng",
+        "link": "https://jones.com",
+        "order": 2,
+        "target": "_self",
+        "rel": "noopener noreferrer"
+    }
+},
+{
+    "model": "utils.footermenuitem",
+    "pk": 9,
+    "fields": {
+        "group": 3,
+        "label": "Trung tâm CSKH",
+        "link": "https://jones.com",
+        "order": 3,
+        "target": "_self",
+        "rel": "noopener noreferrer"
+    }
+}
+]
+
