@@ -1,7 +1,6 @@
 import type { ProductComponentType } from "src/types/shared";
 import { useEffect, useState, useRef } from "react";
 import { Router, useRouter } from "next/router";
-import { Gender } from "src/types/shared";
 import { GetStaticPaths, GetStaticProps } from "next";
 
 import FilterAccordion from "@Components/products/filter/FilterAccordion";
@@ -10,7 +9,6 @@ import Constraints from "@Components/products/constraints";
 import FilterSortSection from "@Components/products/FilterSortSection";
 import ProductsGrid from "@Components/products/ProductsGrid";
 
-import { HIGHEST_PRICE } from "src/constants";
 import { useDialog } from "@Contexts/UIContext";
 import ProductsProvider, {
   filterStateType,
@@ -80,61 +78,23 @@ export default function CategoryPageWithContext({
   const router = useRouter();
   const ref = useRef<{ updateFilterState: Function }>(null);
 
-  const getQueryAsFilter = () => {
-    const queryAsFilter: Partial<filterStateType> = {
-      price: [0, HIGHEST_PRICE],
-    };
-
-    Object.keys(router.query).forEach((param) => {
-      const value = router.query[param];
-      if (
-        param == "categoryId" &&
-        value &&
-        value[0] &&
-        Gender[value[0].toUpperCase() as keyof typeof Gender]
-      ) {
-        queryAsFilter["gender"] = value[0].toUpperCase() as Gender;
-        if (value[1]) queryAsFilter["search"] = value[1];
-      } else if (
-        param == "categoryId" &&
-        (value == "colorways" || value == "new")
-      ) {
-        queryAsFilter["page"] = value;
-      }
-      if (param == "size" || param == "year") {
-        queryAsFilter[param] = Array.isArray(value)
-          ? value.map((v) => Number(v))
-          : [Number(value)];
-      }
-      if (param == "min_price" && queryAsFilter["price"]) {
-        queryAsFilter["price"][0] = Number(value);
-      }
-      if (param == "max_price" && queryAsFilter["price"]) {
-        queryAsFilter["price"][1] = Number(value);
-      }
-      if (param == "color" || param == "height") {
-        queryAsFilter[param] = Array.isArray(value) ? value : [value ?? ""];
-      }
-      if (param == "sort" && typeof value == "string") {
-        queryAsFilter[param] = value;
-      }
-    });
-    return queryAsFilter;
-  };
-
   useEffect(() => {
-    // If this is the "all" category page, do not apply any filters —
-    // show all products. Otherwise update based on the query params.
-    ref.current?.updateFilterState?.(
-      categoryId === "all" ? {} : getQueryAsFilter()
-    );
-  });
+    // Set category filter based on the route param
+    const preFilter: Partial<filterStateType> = {
+      page: categoryId === "all" ? "" : categoryId,
+      category: categoryId === "all" ? "" : categoryId,
+    };
+    ref.current?.updateFilterState?.(preFilter);
+  }, [categoryId]);
 
   return (
     <ProductsProvider
       productImagePlaceholders={productImagePlaceholders}
       ref={ref}
-      preFilter={categoryId === "all" ? {} : getQueryAsFilter()}
+      preFilter={{
+        page: categoryId === "all" ? "" : categoryId,
+        category: categoryId === "all" ? "" : categoryId,
+      }}
       products={products}
     >
       <CategoryPage categoryId={categoryId} />
@@ -154,26 +114,39 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async function ({ params }) {
-  const [category = "all"] = params?.categoryId as string[];
-  // Try backend, fallback to mocks
+  const [categoryParam = "all"] = params?.categoryId as string[];
+  
+  // Fetch all products from API
   let allProducts = MOCK_PRODUCTS;
   try {
     allProducts = await fetchProducts();
   } catch (e) {
-    // ignore
+    // fallback to mocks
   }
 
-  const productImagePlaceholders = allProducts.reduce<Record<string, string>>((acc, product) => {
+  // Filter products by category if not "all"
+  const filteredProducts = 
+    categoryParam === "all"
+      ? allProducts
+      : allProducts.filter((product) => {
+          const catName = categories.find((c) => getPathString(c) === categoryParam) || "";
+          return (
+            (product as any).category?.toLowerCase() === catName.toLowerCase() ||
+            (product.title || "").toLowerCase().includes(catName.toLowerCase())
+          );
+        });
+
+  const productImagePlaceholders = filteredProducts.reduce<Record<string, string>>((acc, product) => {
     acc[product.id] = ProductPlaceholderImg;
     return acc;
   }, {});
 
   return {
     props: {
-      products: allProducts,
-      count: allProducts.length,
-      categoryId: category ?? "",
+      products: filteredProducts,
+      categoryId: categoryParam,
       productImagePlaceholders,
     },
+    revalidate: 3600, // Revalidate every hour
   };
 };
