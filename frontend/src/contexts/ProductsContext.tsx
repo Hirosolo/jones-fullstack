@@ -190,7 +190,7 @@ function ProductsProvider(
   const clearFilters = () => {
     const { gender, page } = filterState.current;
     filterState.current = { ..._filterState, gender, page };
-    setProductListing(products.filter(getGenderPredicate(gender)));
+    setProductListing((products || []).filter(getGenderPredicate(gender)));
     const pageId = gender.toLowerCase() || page;
 
     Router.replace(`/category/${pageId}`, undefined, {
